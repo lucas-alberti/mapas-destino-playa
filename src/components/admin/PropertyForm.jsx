@@ -3,6 +3,8 @@ import { supabase } from '../../lib/supabase'
 import PhotoUpload from './PhotoUpload'
 import UnitEditor from './UnitEditor'
 
+const BASE_URL = 'https://mapas-destino-playa.vercel.app'
+
 export default function PropertyForm({ property, onBack, onSave }) {
   const isEdit = !!property
   const [form, setForm] = useState({
@@ -18,6 +20,7 @@ export default function PropertyForm({ property, onBack, onSave }) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [savedId, setSavedId] = useState(property?.id || null)
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     if (isEdit) loadUnits()
@@ -84,6 +87,14 @@ export default function PropertyForm({ property, onBack, onSave }) {
   }
 
   const propId = property?.id || savedId
+
+  function copyGuestUrl() {
+    const url = `${BASE_URL}/${form.slug}`
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -174,6 +185,39 @@ export default function PropertyForm({ property, onBack, onSave }) {
               <p className="text-[10px] text-gray-400 mt-1">Si completás este campo, el texto será un enlace.</p>
             </div>
           </div>
+
+          {/* URL del huésped */}
+          {form.slug && (
+            <div className="bg-white rounded-2xl p-4 shadow-sm">
+              <h2 className="text-sm font-semibold text-gray-700 mb-3">URL del huésped</h2>
+              <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5">
+                <span className="flex-1 text-xs text-gray-600 truncate select-all">
+                  {BASE_URL}/<span className="text-brand font-medium">{form.slug}</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={copyGuestUrl}
+                  className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all"
+                  style={{
+                    backgroundColor: copied ? '#dcfce7' : '#025479',
+                    color: copied ? '#16a34a' : '#ffffff',
+                  }}
+                >
+                  {copied ? (
+                    <>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      Copiado
+                    </>
+                  ) : (
+                    <>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                      Copiar
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Foto */}
           <PhotoUpload
