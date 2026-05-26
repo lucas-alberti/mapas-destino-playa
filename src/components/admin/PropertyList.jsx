@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
-import { TENANT } from '../../lib/config'
+import { TENANT, BRAND_NAME } from '../../lib/config'
 
 export default function PropertyList({ onEdit, onCreate }) {
   const [properties, setProperties] = useState([])
@@ -36,7 +36,7 @@ export default function PropertyList({ onEdit, onCreate }) {
       <header className="bg-brand text-white px-4 py-4 flex items-center justify-between">
         <div>
           <h1 className="text-base font-bold">Propiedades</h1>
-          <p className="text-white/60 text-xs">Destino Playa</p>
+          <p className="text-white/60 text-xs">{BRAND_NAME}</p>
         </div>
         <button
           onClick={onCreate}

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import PropertyList from '../components/admin/PropertyList'
 import PropertyForm from '../components/admin/PropertyForm'
+import { BRAND_NAME } from '../lib/config'
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin'
 
@@ -43,7 +44,7 @@ export default function AdminPage() {
           <div className="text-center mb-6">
             <p className="text-3xl mb-2">🗺️</p>
             <h1 className="text-xl font-bold text-brand">Panel Admin</h1>
-            <p className="text-gray-500 text-sm mt-1">Destino Playa</p>
+            <p className="text-gray-500 text-sm mt-1">{BRAND_NAME}</p>
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
             <input

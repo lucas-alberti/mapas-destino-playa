@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { TENANT } from '../lib/config'
+import { TENANT, BRAND_NAME } from '../lib/config'
 import MapView from '../components/guest/MapView'
 import InstructionsPanel from '../components/guest/InstructionsPanel'
 
@@ -77,7 +77,7 @@ export default function GuestPage() {
       {/* Header */}
       <header className="bg-[#025479] text-white text-center px-4 pt-5 pb-4">
         <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/60 mb-1">
-          Destino Playa · {property.location}
+          {BRAND_NAME} · {property.location}
         </p>
         <h1 className="text-xl font-bold">{property.name}</h1>
       </header>
