@@ -1,4 +1,27 @@
+import { extractYouTubeId } from '../admin/UnitEditor'
+
 export default function MapView({ property, selectedUnit }) {
+  const videoId = selectedUnit?.video_url ? extractYouTubeId(selectedUnit.video_url) : null
+
+  // Unit selected WITH video → embed YouTube, hide photo
+  if (videoId) {
+    return (
+      <div className="w-full shadow-md" style={{ borderRadius: 16, overflow: 'hidden' }}>
+        <div style={{ position: 'relative', paddingTop: '56.25%' }}>
+          <iframe
+            key={videoId}
+            src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
+            allow="autoplay; encrypted-media; picture-in-picture"
+            allowFullScreen
+            title="Video de llegada"
+          />
+        </div>
+      </div>
+    )
+  }
+
+  // No photo at all
   if (!property.photo_url) {
     return (
       <div
@@ -10,6 +33,7 @@ export default function MapView({ property, selectedUnit }) {
     )
   }
 
+  // Default: photo with optional callout
   return (
     <div className="relative w-full shadow-md" style={{ borderRadius: 16 }}>
       <img

@@ -1,6 +1,17 @@
 import { useState, useRef, useCallback } from 'react'
 import { supabase } from '../../lib/supabase'
 
+export function extractYouTubeId(url) {
+  if (!url) return null
+  // youtu.be/ID
+  const short = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/)
+  if (short) return short[1]
+  // youtube.com/watch?v=ID  or  youtube.com/embed/ID  or  youtube.com/shorts/ID
+  const long = url.match(/(?:v=|\/embed\/|\/shorts\/)([a-zA-Z0-9_-]{11})/)
+  if (long) return long[1]
+  return null
+}
+
 export default function UnitEditor({ unit, propertyId, photoUrl, onClose, onSave }) {
   const isEdit = !!unit
   const [form, setForm] = useState({
@@ -8,6 +19,7 @@ export default function UnitEditor({ unit, propertyId, photoUrl, onClose, onSave
     floor: unit?.floor || '',
     block: unit?.block || '',
     tip: unit?.tip || '',
+    video_url: unit?.video_url || '',
     pos_x: unit?.pos_x ?? 50,
     pos_y: unit?.pos_y ?? 50,
     steps: unit?.steps ? [...unit.steps] : [],
@@ -84,6 +96,7 @@ export default function UnitEditor({ unit, propertyId, photoUrl, onClose, onSave
       floor: form.floor || null,
       block: form.block || null,
       tip: form.tip || null,
+      video_url: form.video_url || null,
       steps: form.steps,
       pos_x: form.pos_x,
       pos_y: form.pos_y,
@@ -173,6 +186,30 @@ export default function UnitEditor({ unit, propertyId, photoUrl, onClose, onSave
                 placeholder="Ej: Unidad 101"
                 className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm mt-1 focus:outline-none focus:ring-2 focus:ring-brand/40"
               />
+            </div>
+
+            <div className="col-span-2">
+              <label className="text-xs text-gray-500">Video de llegada (YouTube)</label>
+              <input
+                name="video_url"
+                value={form.video_url}
+                onChange={handleChange}
+                placeholder="https://youtu.be/... o https://youtube.com/watch?v=..."
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm mt-1 focus:outline-none focus:ring-2 focus:ring-brand/40"
+              />
+              {extractYouTubeId(form.video_url) && (
+                <div className="mt-2 flex items-center gap-3 bg-gray-50 rounded-xl p-2">
+                  <img
+                    src={`https://img.youtube.com/vi/${extractYouTubeId(form.video_url)}/mqdefault.jpg`}
+                    alt="Thumbnail"
+                    className="w-24 h-14 object-cover rounded-lg flex-shrink-0"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-xs font-medium text-gray-700">Video detectado ✓</p>
+                    <p className="text-[11px] text-gray-400 truncate">ID: {extractYouTubeId(form.video_url)}</p>
+                  </div>
+                </div>
+              )}
             </div>
             <div>
               <label className="text-xs text-gray-500">Piso</label>
