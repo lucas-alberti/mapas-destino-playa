@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
+import { TENANT } from '../../lib/config'
 
 export default function PropertyList({ onEdit, onCreate }) {
   const [properties, setProperties] = useState([])
@@ -10,6 +11,7 @@ export default function PropertyList({ onEdit, onCreate }) {
     const { data } = await supabase
       .from('map_properties')
       .select('*')
+      .eq('tenant', TENANT)
       .order('created_at', { ascending: false })
     setProperties(data || [])
     setLoading(false)

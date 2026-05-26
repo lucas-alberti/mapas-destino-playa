@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { TENANT } from '../lib/config'
 import MapView from '../components/guest/MapView'
 import InstructionsPanel from '../components/guest/InstructionsPanel'
 
@@ -18,6 +19,7 @@ export default function GuestPage() {
         .from('map_properties')
         .select('*')
         .eq('slug', slug)
+        .eq('tenant', TENANT)
         .single()
 
       if (propErr || !prop) {

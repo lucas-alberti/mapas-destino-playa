@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
+import { TENANT } from '../../lib/config'
 import PhotoUpload from './PhotoUpload'
 import UnitEditor from './UnitEditor'
 
@@ -70,7 +71,7 @@ export default function PropertyForm({ property, onBack, onSave }) {
     } else {
       const { data, error: err } = await supabase
         .from('map_properties')
-        .insert(form)
+        .insert({ ...form, tenant: TENANT })
         .select()
         .single()
       if (err) { setError(err.message); setSaving(false); return }
